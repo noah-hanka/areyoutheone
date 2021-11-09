@@ -33,7 +33,6 @@ class MatchMaker:
     def matchMakeParticipants(self):
         participantPool = self._remainingParticipants.copy()
         self._numPerfectMatchedActivePlayers = 0
-        print("Matchmaking participants...\n")
         self._GUIcurrentPartners = dict()
         while participantPool:
             p1, p2 = random.sample(participantPool,2)
@@ -50,7 +49,7 @@ class MatchMaker:
         for person in self._currentPartners.values():
             if person.getCurrentPartnerName() == person.getPerfectMatchName():
                 self._numPerfectMatchedActivePlayers += 1
-        return self._currentPartners
+        return "Matchmaking participants...\n"
     def pickRandomPerson(self):
         return random.choice(self._remainingParticipants)
     def everyoneMatched(self):
