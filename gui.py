@@ -108,7 +108,7 @@ def displayPartners():
     currCol = 2
     global perfectlyMatchedLabels
     global remainingPlayerLabels
-    perfectlyMatchedLabels = {"couple" + str(i): tk.Label(root, font="Raleway", fg="white", bg="#06d6a0", height=4, width=16, borderwidth=2, relief="ridge") for i in range(1, (gameshow._mm._numConfirmedPerfectlyMatched // 2)+1)}
+    perfectlyMatchedLabels = {"couple" + str(i): tk.Label(root, font="Raleway", fg="black", bg="#faea1e", height=4, width=16, borderwidth=2, relief="ridge") for i in range(1, (gameshow._mm._numConfirmedPerfectlyMatched // 2)+1)}
     remainingPlayerLabels = {"couple" + str(i): tk.Label(root, font="Raleway", fg="white", bg="#db3c63", height=4, width=16, borderwidth=2, relief="ridge") for i in range(1, (gameshow._mm._numRemainingParticipants // 2)+1)}
     for person, partner in gameshow._mm._GUIconfirmedPerfectlyMatched.items():
         perfectlyMatchedLabels["couple"+str(i+1)].configure(text=f"{person} & {partner}")

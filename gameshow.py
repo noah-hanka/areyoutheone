@@ -14,10 +14,9 @@ class Gameshow:
     def truthBooth(self):
         results = False
         truthBoothChoice = self._mm.pickRandomPerson()
-        while truthBoothChoice.getName() in self._prevTruthBooths:
+        while (truthBoothChoice.getName(), truthBoothChoice.getCurrentPartnerName()) in self._prevTruthBooths or (truthBoothChoice.getCurrentPartnerName(), truthBoothChoice.getName()) in self._prevTruthBooths:
             truthBoothChoice = self._mm.pickRandomPerson()
-        self._prevTruthBooths.add(truthBoothChoice.getCurrentPartnerName())
-        self._prevTruthBooths.add(truthBoothChoice.getName())
+        self._prevTruthBooths.add((truthBoothChoice.getCurrentPartnerName(),truthBoothChoice.getName()))
         if truthBoothChoice.getCurrentPartnerName() == truthBoothChoice.getPerfectMatchName():
             self._mm.removeCouple(truthBoothChoice)
             results = True
@@ -25,12 +24,10 @@ class Gameshow:
     def getCurrentWeek(self):
         return self._currentWeek
     def simulateWeek(self):
-        print(f"Week: {self._currentWeek}")
         scrambled = False
         while self._mm.determineIfScramble() is True:
             scrambled = True
             self._mm.matchMakeParticipants()
-            self._prevTruthBooths = set()
         if self._mm.everyoneMatched() is True:
             rem = self._mm._numRemainingParticipants
             self._mm._numConfirmedPerfectlyMatched += rem
@@ -48,29 +45,29 @@ class Gameshow:
             response= f"lovely couple of {p1_name} and {p2_name} were sent to the TRUTH BOOTH\n{response}\n" \
                    f"There are currently {self._mm._numRemainingParticipants} partipants still left.\n" \
                    f"Will they all find true love?\n"
-            if scrambled: response = f"After some mingling this week,\nthe {response}"
-            else: response = f"The {response}"
+            if scrambled: response = f"\nAfter some mingling this week,\nthe {response}"
+            else: response = f"\nThe {response}"
             return response
 
     def endGame(self,remainder):
         s = ""
 
-        s += f"The remaining {remainder} participants all happen to be with their perfect match!\nEveryone has found their true love!\n\nThese were everyones matches:\n" \
+        s += f"\nThe remaining {remainder} participants all happen to be with their perfect match!\nEveryone has found their true love!\n\nThese were everyones matches:\n" \
              f"{self._mm.printPerfectMatches()}"
         return s
-    def runGame(self,pauseEachWeek=False):
+    def runGame(self,print_results=False,pauseEachWeek=False):
         self._mm.assignPerfectMatches()
         while not (self._mm.everyoneMatched()):
-            print(self.simulateWeek())
+            if print_results:
+                print(f'Week: {self.getCurrentWeek()}')
+                print(self.simulateWeek())
+            else:
+                self.simulateWeek()
             if pauseEachWeek:
                 input("Press ENTER to proceed to the next week\n")
             self._currentWeek += 1
 
 if __name__ == "__main__":
-    contestant_names = ["John","Rebecca","Steve","Emili","Janette","Robert","Sarah","Ellie","Alex","Thomas","Melissa","Billie","Leah","Alberto","Matt","Jennifer"]
-    AreYouTheOne = Gameshow(contestant_names)
-    start = time.time()
-    AreYouTheOne.runGame()
-    end = time.time()
-    print(f"Algorithm found all matches in {end - start} seconds!")
+    AreYouTheOne = Gameshow()
+    AreYouTheOne.runGame(True)
 
