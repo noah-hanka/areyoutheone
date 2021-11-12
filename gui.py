@@ -9,7 +9,7 @@ print(screen_height)
 root.title("Are You The One?")
 canvas = tk.Canvas(root, width=screen_width, height=screen_height, bg="#48bfe3")
 canvas.grid(columnspan=16,rowspan=10)
-
+root.state('zoomed')
 logo = Image.open("logo.jfif")
 
 logo = logo.resize((round(.2*screen_width),round(.305*screen_height)), Image.ANTIALIAS)
