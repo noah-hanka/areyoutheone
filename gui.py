@@ -2,34 +2,37 @@ import tkinter as tk
 from PIL import Image, ImageTk
 from gameshow import *
 root = tk.Tk()
-w, h = root.winfo_screenwidth(), root.winfo_screenheight()
+screen_width, screen_height = root.winfo_screenwidth(), root.winfo_screenheight()
+print(screen_width)
+print(screen_height)
+#Width = 1920 * 1080
 root.title("Are You The One?")
-canvas = tk.Canvas(root,width=w,height=h,bg="#48bfe3")
+canvas = tk.Canvas(root, width=screen_width, height=screen_height, bg="#48bfe3")
 canvas.grid(columnspan=16,rowspan=10)
 
 logo = Image.open("logo.jfif")
-scale = .3
-logo = logo.resize((round(1280*scale),round(1098*scale)), Image.ANTIALIAS)
+
+logo = logo.resize((round(.2*screen_width),round(.305*screen_height)), Image.ANTIALIAS)
 logo = ImageTk.PhotoImage(logo)
 logo_label = tk.Label(image=logo)
 logo_label.image = logo
-logo_label.grid(columnspan=3, rowspan=2, column=0,row=0,pady=80)
+logo_label.grid(columnspan=3, rowspan=2, column=0,row=0,pady=.0741*screen_height)
 
-begin = tk.Label(root, width = 18, height = 4, text="Press Start to begin!", font="Raleway", fg="white", bg="#db3c63", borderwidth=2, relief="ridge")
+begin = tk.Label(root, width = round(.0094*screen_width), height = round(.0037*screen_height), text="Press Start to begin!", font=("Raleway",round(.0078125*screen_width)), fg="white", bg="#db3c63", borderwidth=2, relief="ridge")
 begin.grid(columnspan=2,column=13,row=0)
 
 gameshow = Gameshow()
 
-instructions = tk.Label(root, width = 80, height = 3, font="Raleway", fg="white", bg="#db3c63", text="Enter the names of up to 24 participants, separated by spaces,\nor leave blank for default names.", borderwidth=2, relief="ridge")
+instructions = tk.Label(root, width = round(.042*screen_width), height = round(.0028*screen_height), font=("Raleway",round(.0078125*screen_width)), fg="white", bg="#db3c63", text="Enter the names of up to 16 participants, separated by spaces,\nor leave blank for default names.", borderwidth=2, relief="ridge")
 def start_game():
     main_btn_text.set("Submit Participants")
     begin.destroy()
-    instructions.grid(columnspan=8,column=4,row=0,pady=20)
+    instructions.grid(columnspan=8,column=4,row=0,pady=round(.0185*screen_height))
     nameEntered.grid(columnspan=8,column=4,row=1)
     main_btn.configure(command=submit_names)
 
 contestant_input = None
-nameEntered = tk.Entry(root, width=80)
+nameEntered = tk.Entry(root, width=round(.042*screen_width))
 def submit_names():
     global contestant_input
     contestant_input = str(nameEntered.get())
@@ -44,7 +47,7 @@ def submit_names():
         main_btn.configure(command=week)
     else:
         contestant_input = contestant_input.strip().split(" ")
-        if len(contestant_input) % 2 == 0 and len(contestant_input) <= 24:
+        if len(contestant_input) % 2 == 0 and len(contestant_input) <= 16:
             gameshow = Gameshow(contestant_input)
             gameshow._mm.assignPerfectMatches()
             nameEntered.destroy()
@@ -56,19 +59,19 @@ def submit_names():
 
         else:
             main_btn_text.set("Resubmit Names")
-            instructions.configure(text="Invalid Input. Enter the names of up to 24 paricipants, separated by spaces,\nor leave blank for default names.\nMake sure you are entering an even number of players!")
+            instructions.configure(text="Invalid Input. Enter the names of up to 16 paricipants, separated by spaces,\nor leave blank for default names.\nMake sure you are entering an even number of players!")
             return
-    tbInfo.configure(text="Are You The One?", font=("Raleway",25,'bold'),width=20,height=5)
-    tbInfo.grid(columnspan=8, rowspan=3, column=4, row=0, pady=20)
+    tbInfo.configure(text="Are You The One?", font=("Raleway",round(.013*screen_width),'bold'),width=round(.01*screen_width),height=round(.0046*screen_height))
+    tbInfo.grid(columnspan=8, rowspan=3, column=4, row=0, pady=round(.018*screen_height))
     weekLabel.configure(text='Press Start!')
-    weekLabel.grid(columnspan=8,rowspan=1,column=4,row=3,pady=10)
+    weekLabel.grid(columnspan=8,rowspan=1,column=4,row=3,pady=round(.0093*screen_height))
     skip_btn.grid(columnspan=2, column=13, row=0)
 
-weekLabel = tk.Label(root, width = 36, height = 3, font=("Raleway",25,'bold'), fg="white", bg="#db3c63", borderwidth=2, relief="ridge")
+weekLabel = tk.Label(root, width = round(.019*screen_width), height = round(.003*screen_height), font=("Raleway",round(.013*screen_width),'bold'), fg="white", bg="#db3c63", borderwidth=2, relief="ridge")
 def week():
     if gameshow.getCurrentWeek() == 0:
         main_btn_text.set("Proceed to\nNext Week!")
-        tbInfo.configure(width=80,height=22,font='Raleway')
+        tbInfo.configure(width=round(.042*screen_width),height=round(.02*screen_height),font=("Raleway",round(.0078125*screen_width)))
         gameshow._currentWeek = 1
     inf = gameshow.simulateWeek()
     displayTruthBooth(inf)
@@ -80,7 +83,7 @@ def week():
         skip_btn.destroy()
 
 def skipResults():
-    tbInfo.configure(width=80, height=22, font='Raleway')
+    tbInfo.configure(width=round(.042*screen_width),height=round(.02*screen_height), font=("Raleway",round(.0078125*screen_width)))
     while not(gameshow._mm.everyoneMatched()):
         gameshow._currentWeek += 1
         info = gameshow.simulateWeek()
@@ -92,13 +95,15 @@ def skipResults():
     skip_btn.destroy()
 
 
-tbInfo = tk.Label(root, font="Raleway", fg="white", bg="#db3c63", text="",width=80,height=22, borderwidth=2, relief="ridge")
+tbInfo = tk.Label(root, font=("Raleway",round(.0078125*screen_width)), fg="white", bg="#db3c63", text="",width=round(.042*screen_width),height=round(.02*screen_height), borderwidth=2, relief="ridge")
 def displayTruthBooth(info):
     tbInfo.configure(text=f"Truth Booth Week {gameshow.getCurrentWeek()}\n{info}")
-    tbInfo.grid(columnspan=8,rowspan=3,column=4,row=0,pady=20)
+    tbInfo.grid(columnspan=8,rowspan=3,column=4,row=0,pady=round(.019*screen_height))
 
 perfectlyMatchedLabels = None
 remainingPlayerLabels = None
+label_h = round(screen_height * .0037)
+label_w = round(screen_width * .0083)
 def displayPartners():
     i = 0
     j = 0
@@ -108,8 +113,8 @@ def displayPartners():
     currCol = 2
     global perfectlyMatchedLabels
     global remainingPlayerLabels
-    perfectlyMatchedLabels = {"couple" + str(i): tk.Label(root, font="Raleway", fg="black", bg="#faea1e", height=4, width=16, borderwidth=2, relief="ridge") for i in range(1, (gameshow._mm._numConfirmedPerfectlyMatched // 2)+1)}
-    remainingPlayerLabels = {"couple" + str(i): tk.Label(root, font="Raleway", fg="white", bg="#db3c63", height=4, width=16, borderwidth=2, relief="ridge") for i in range(1, (gameshow._mm._numRemainingParticipants // 2)+1)}
+    perfectlyMatchedLabels = {"couple" + str(i): tk.Label(root, font=("Raleway",round(.0078125*screen_width)), fg="black", bg="#faea1e", height=label_h, width=label_w, borderwidth=2, relief="ridge") for i in range(1, (gameshow._mm._numConfirmedPerfectlyMatched // 2)+1)}
+    remainingPlayerLabels = {"couple" + str(i): tk.Label(root, font=("Raleway",round(.0078125*screen_width)), fg="white", bg="#db3c63", height=label_h, width=label_w, borderwidth=2, relief="ridge") for i in range(1, (gameshow._mm._numRemainingParticipants // 2)+1)}
     for person, partner in gameshow._mm._GUIconfirmedPerfectlyMatched.items():
         perfectlyMatchedLabels["couple"+str(i+1)].configure(text=f"{person} & {partner}")
         perfectlyMatchedLabels["couple"+str(i+1)].grid(columnspan = 2, column = currCol, row = currRow)
@@ -130,12 +135,12 @@ def displayPartners():
             placed = 0
 
 main_btn_text = tk.StringVar()
-main_btn = tk.Button(root, textvariable = main_btn_text, command = start_game, font="Raleway", bg="#db3c63", fg="white", height=4, width=18)
+main_btn = tk.Button(root, textvariable = main_btn_text, command = start_game, font=("Raleway",round(.0078125*screen_width)), bg="#db3c63", fg="white", height=round(.0021*screen_height), width=round(.0166*screen_width))
 main_btn_text.set("Start")
 main_btn.grid(columnspan=2, column=13, row=1)
 
 skip_btn_text = tk.StringVar()
-skip_btn = tk.Button(root, textvariable = skip_btn_text, command = skipResults, font="Raleway", bg="#db3c63", fg="white", height=4, width=18)
+skip_btn = tk.Button(root, textvariable = skip_btn_text, command = skipResults, font=("Raleway",round(.0078125*screen_width)), bg="#db3c63", fg="white", height=round(.0021*screen_height), width=round(.0166*screen_width))
 skip_btn_text.set("Skip to results!")
 
 root.mainloop()
